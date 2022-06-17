@@ -13,7 +13,6 @@ app.get("/", (req, res) => {
 
 app.post("/callback", (req, res) => {
   console.log(req.body)
-  res.send("Hello World!")
 })
 
 app.post("/notifications", (req, res) => {
