@@ -1,9 +1,13 @@
 const { Router } = require("express")
 const { register, login } = require("../controllers/auth")
-const { validateRegister, validateThirdParty } = require("../validators/auth")
+const {
+  validateRegister,
+  validateLogin,
+  validateThirdParty,
+} = require("../validators/auth")
 const router = Router()
 
-router.post("/login", login)
+router.post("/login", validateLogin, login)
 router.post("/register", validateRegister, register)
 
 /* 

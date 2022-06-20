@@ -5,8 +5,8 @@ const JWT_SECRET = process.env.JWT_SECRET
  * @description - This function is used to verify the JWT token
  * @param {*} user
  */
-const signToken = (user) => {
-  return jwt.sign(
+const signToken = (user) =>
+  jwt.sign(
     {
       userId: user._id,
       role: user.role,
@@ -16,7 +16,6 @@ const signToken = (user) => {
       expiresIn: "1h",
     }
   )
-}
 
 /**
  * @description - This function is used to verify the JWT token
