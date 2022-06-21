@@ -33,31 +33,42 @@ const login = async (req, res) => {
 }
 
 const getToken = async (req, res) => {
-  const { provider, code } = matchedData(req)
-  const providerResponse = await thirdAuth.getToken(provider)(code)
+  try {
+    const provider = req.path.split("/").pop()
+    const { code } = matchedData(req)
+    const providerResponse = await thirdAuth.getToken(provider, code)
 
-  if (providerResponse.status === 200) {
-    const token = await providerResponse.json()
-    res.send({ token })
-    return
+    console.log(providerResponse)
+    providerResponse.error
+      ? handleThrowHttpError(
+          res,
+          providerResponse.error.status,
+          providerResponse.error.message
+        )
+      : res.send(providerResponse)
+  } catch (err) {
+    handleThrowHttpError(res, 500, "")
   }
-  console.log(await providerResponse.json())
-  console.log(providerResponse.status)
-  handleThrowHttpError(res, providerResponse.status, "ALGO MALIO SAL")
 }
 
 const refreshToken = async (req, res) => {
-  let { provider, token } = matchedData(req)
-  const providerResponse = await thirdAuth.refreshToken(provider)(token)
+  try {
+    const provider = req.path.split("/").pop()
+    const { token } = matchedData(req)
 
-  if (providerResponse.status === 200) {
-    const newToken = await providerResponse.json()
-    res.send({ token: newToken })
-    return
+    const providerResponse = await thirdAuth.refreshToken(provider, token)
+
+    if (providerResponse.status === 200) {
+      const newToken = await providerResponse.json()
+      res.send({ token: newToken })
+      return
+    }
+    console.log(await providerResponse.json())
+    console.log(providerResponse.status)
+    handleThrowHttpError(res, providerResponse.status, "ALGO MALIO SAL")
+  } catch (err) {
+    handleThrowHttpError(res, 500, "")
   }
-  console.log(await providerResponse.json())
-  console.log(providerResponse.status)
-  handleThrowHttpError(res, providerResponse.status, "ALGO MALIO SAL")
 }
 
 module.exports = {

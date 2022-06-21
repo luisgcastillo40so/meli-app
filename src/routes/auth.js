@@ -8,7 +8,6 @@ const {
 const {
   validateRegister,
   validateLogin,
-  validateThirdParty,
   validateCode,
   validateToken,
 } = require("../middlewares/validators/auth")
@@ -19,17 +18,12 @@ router.post("/login", validateLogin, login)
 
 router.post("/register", validateRegister, register)
 
-router.post(
-  "/oauth/token/:provider/:code",
-  validateThirdParty,
-  validateCode,
-  getToken
-)
-router.post(
-  "/oauth/refresh/:provider/:token",
-  validateThirdParty,
-  validateToken,
-  refreshToken
-)
+const oauthProviders = ["meli"]
+
+oauthProviders.forEach((provider) => {
+  router.post(`/token/${provider}`, validateCode, getToken)
+
+  router.post(`/refresh/${provider}`, validateToken, refreshToken)
+})
 
 module.exports = router
