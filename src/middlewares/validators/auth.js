@@ -1,5 +1,5 @@
 const { check } = require("express-validator")
-const validationResult = require("../utils/handleValidator")
+const validationResult = require("../../utils/handleValidator")
 
 const validateRegister = [
   check("email").exists().isEmail(),
@@ -14,9 +14,19 @@ const validateLogin = [
   validationResult,
 ]
 
-const validateThirdParty = [
-  check("provider").isIn(["google", "facebook"]),
-  check("code").isLength({ min: 1 }),
+const validateThirdParty = [check("provider").isIn(["meli"]), validationResult]
+
+const validateCode = [
+  check("code")
+    .exists()
+    .custom((code) => code.includes("code=") || throwError("Invalid code")),
+  validationResult,
+]
+
+const validateToken = [
+  check("token")
+    .exists()
+    .custom((token) => token.includes("token=") || throwError("Invalid token")),
   validationResult,
 ]
 
@@ -24,4 +34,6 @@ module.exports = {
   validateRegister,
   validateThirdParty,
   validateLogin,
+  validateCode,
+  validateToken,
 }
