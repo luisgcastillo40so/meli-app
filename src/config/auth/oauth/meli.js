@@ -6,36 +6,36 @@ const MELI_REDIRECT_URI = process.env.MELI_REDIRECT_URI
 const MELI_TOKEN_URI = "https://api.mercadolibre.com/oauth/token"
 
 const getToken = async (code) => {
-  const res = await fetch(MELI_TOKEN_URI, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Accept: "application/json",
-    },
-    body: `grant_type=authorization_code&client_id=${MELI_APP_ID}&client_secret=${MELI_CLIENT_SECRET}&code=${code}&redirect_uri=${MELI_REDIRECT_URI}`,
-  })
+	const res = await fetch(MELI_TOKEN_URI, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded",
+			Accept: "application/json",
+		},
+		body: `grant_type=authorization_code&client_id=${MELI_APP_ID}&client_secret=${MELI_CLIENT_SECRET}&code=${code}&redirect_uri=${MELI_REDIRECT_URI}`,
+	})
 
-  if (res.status === 200) {
-    return res.json()
-  }
+	if (res.status === 200) {
+		return res.json()
+	}
 
-  return {
-    error: await res.json(),
-  }
+	return {
+		error: await res.json(),
+	}
 }
 
 const refreshToken = (refreshToken) => {
-  return fetch(MELI_TOKEN_URI, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Accept: "application/json",
-    },
-    body: `grant_type=refresh_token&client_id=${MELI_APP_ID}&client_secret=${MELI_CLIENT_SECRET}&refresh_token=${refreshToken}`,
-  })
+	return fetch(MELI_TOKEN_URI, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded",
+			Accept: "application/json",
+		},
+		body: `grant_type=refresh_token&client_id=${MELI_APP_ID}&client_secret=${MELI_CLIENT_SECRET}&refresh_token=${refreshToken}`,
+	})
 }
 
 module.exports = {
-  getToken,
-  refreshToken,
+	getToken,
+	refreshToken,
 }
