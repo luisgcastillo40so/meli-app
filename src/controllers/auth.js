@@ -5,30 +5,39 @@ const { userModel } = require("../models")
 const handleThrowHttpError = require("../utils/handleThrowHttpError")
 const thirdAuth = require("../config/auth")
 
-const register = async (req, res) => {
+const signup = async (req, res) => {
   req = matchedData(req)
   const password = await encrypt(req.password)
   const body = { ...req, password }
-  const user = await userModel.create(body)
-  user.set("password", undefined, { strict: false })
-
+  let user;
+  try {
+    user = await userModel.create(body)
+    user.set("password", undefined, { strict: false })
+  } catch (error) {
+    console.log("*** REQ ERROR: Email alredy in use")
+    if (error.code === 11000) handleThrowHttpError(res, 409, { code: 1, message: "Email alredy in use" })
+    return
+  }
   res.send({
     token: signToken(user),
-    user,
+    user
   })
 }
 
 const login = async (req, res) => {
   const { email, password } = matchedData(req)
-  const user = await userModel.findOne({ email }).select("password role name")
-
+  const user = await userModel.findOne({ email }).select("+password")
   if (user) {
     const isMatch = await compare(password, user.password)
     user.set("password", undefined, { strict: false })
-    isMatch && res.send({ token: signToken(user), user })
+    if (isMatch) {
+      isMatch && res.send({ token: signToken(user), user })
+      return
+    }
   }
+  console.log("*** REQ ERROR: Wrong email or password")
 
-  handleThrowHttpError(res, 401, "Invalid email or password")
+  handleThrowHttpError(res, 401, { code: 2, message: "Invalid email or password" })
   return
 }
 
@@ -41,10 +50,10 @@ const getToken = async (req, res) => {
     console.log(providerResponse)
     providerResponse.error
       ? handleThrowHttpError(
-          res,
-          providerResponse.error.status,
-          providerResponse.error.message
-        )
+        res,
+        providerResponse.error.status,
+        providerResponse.error
+      )
       : res.send(providerResponse)
   } catch (err) {
     handleThrowHttpError(res, 500, "")
@@ -72,7 +81,7 @@ const refreshToken = async (req, res) => {
 }
 
 module.exports = {
-  register,
+  signup,
   login,
   getToken,
   refreshToken,
