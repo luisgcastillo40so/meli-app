@@ -8,8 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET
 const signToken = (user) =>
   jwt.sign(
     {
-      userId: user._id,
-      role: user.role,
+      user
     },
     JWT_SECRET,
     {
