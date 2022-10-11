@@ -10,7 +10,7 @@ const checkRole = (roles) => (req, res, next) => {
   try {
     req.user.rol.some((rol) => roles.includes(rol))
       ? next()
-      : handleThrowHttpError(res, 403, "Unahuthorized")
+      : handleThrowHttpError(res, 403, { code: 403, message: "Unahuthorized" })
   } catch (err) {
     handleThrowHttpError(res, 500, "")
   }
