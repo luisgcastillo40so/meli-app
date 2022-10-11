@@ -6,9 +6,7 @@
  */
 const handleThrowHttpError = (res, statusCode, error) => {
   res.status(statusCode).send({
-    error: {
-      message: error,
-    },
+    error
   })
 }
 
