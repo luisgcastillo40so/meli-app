@@ -22,6 +22,10 @@ const UserSchema = new Schema(
       default:
         "https://koohanimlaw.com/wp-content/uploads/2015/01/default-user-icon-profile.png",
     },
+    address: {
+      type: String,
+      default: ""
+    },
     settings: {
       backendUri: {
         type: String,
@@ -44,6 +48,10 @@ const UserSchema = new Schema(
         default: ""
       },
       supportEndpoint: {
+        type: String,
+        default: ""
+      },
+      backendToken: {
         type: String,
         default: ""
       },
