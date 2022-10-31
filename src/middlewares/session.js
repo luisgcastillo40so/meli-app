@@ -2,7 +2,7 @@ const handleThrowHttpError = require("../utils/handleThrowHttpError")
 const { verifyToken } = require("../utils/handleJWT")
 const { userModel } = require("../models")
 
-const authMiddleware = async (req, res, next) => {
+const session = async (req, res, next) => {
   try {
     if (!req.headers.authorization) {
       handleThrowHttpError(res, 401, { code: 01, message: "NOT TOKEN" })
@@ -22,4 +22,4 @@ const authMiddleware = async (req, res, next) => {
     handleThrowHttpError(res, 500, "")
   }
 }
-module.exports = authMiddleware
+module.exports = session
