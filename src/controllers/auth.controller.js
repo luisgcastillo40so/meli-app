@@ -20,7 +20,7 @@ const signup = async (req, res) => {
   }
   res.send({
     token: signToken(user),
-    user
+    users
   })
 }
 
@@ -47,7 +47,6 @@ const getToken = async (req, res) => {
     const { code } = matchedData(req)
     const providerResponse = await thirdAuth.getToken(provider, code)
 
-    console.log(providerResponse)
     providerResponse.error
       ? handleThrowHttpError(
         res,
