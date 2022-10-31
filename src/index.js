@@ -1,8 +1,11 @@
-const app = require("./app")
+require("dotenv").config()
+const server = require("./app")
 const dbConnection = require("./db/mongo")
+require("./socketio").addEvents(server)
 
-app.listen(app.get("port"), () => {
-  console.log(`Server listening on port ${app.get("port")}`)
+
+server.listen(process.env.PORT, () => {
+  console.log(`Server listening on port ${process.env.PORT}`)
 })
 
 dbConnection()
