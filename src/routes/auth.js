@@ -4,7 +4,7 @@ const {
   login,
   getToken,
   refreshToken,
-} = require("../controllers/auth")
+} = require("../controllers/auth.controller")
 const {
   validateSignup,
   validateLogin,

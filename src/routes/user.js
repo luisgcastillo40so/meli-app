@@ -2,14 +2,14 @@ const { Router } = require("express")
 const {
   updateUser,
   deleteUser
-} = require("../controllers/user")
+} = require("../controllers/user.controller")
 const handleMultiPart = require("../middlewares/handleMultiPart")
-const authMiddleware = require("../middlewares/session")
+const session = require("../middlewares/session")
 const { validateUpdateUser } = require("../middlewares/validators/user")
 
 const router = Router()
 
-router.put("/", authMiddleware, handleMultiPart, validateUpdateUser, updateUser)
-router.delete("/", authMiddleware, deleteUser)
+router.put("/", session, handleMultiPart, validateUpdateUser, updateUser)
+router.delete("/", session, deleteUser)
 
 module.exports = router 
