@@ -3,6 +3,8 @@ const FormData = require('form-data');
 const fs = require("fs")
 const uploadFile = async (file) => {
   console.log(`UPLOADED FILE: ${file.path}`)
+  console.log(process.env.DISCORD_TOKEN)
+  console.log(process.env.DISCORD_CHANNEL_ID)
   const form = new FormData()
   const image = fs.readFileSync(file.path)
   form.append("files[0]", image, {

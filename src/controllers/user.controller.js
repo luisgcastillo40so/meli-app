@@ -27,23 +27,25 @@ const updateUser = async (req, res) => {
 
     if (files.length) {
       const response = await handleDiscordUploads(files)
+      console.log(response)
       newData.profileImage = response[0].attachments[0].url
     }
 
-    user = await userModel.findByIdAndUpdate(user["_id"], {
+    newUser = await userModel.findByIdAndUpdate(user["_id"], {
       "$set": newData
     }, {
       new: true
     })
-    user.set("password", undefined, { strict: false })
+    newUser.set("password", undefined, { strict: false })
   } catch (error) {
+    console.log(error)
     handleThrowHttpError(res, 500, error)
     if (error.code === 11000) handleThrowHttpError(res, 409, { code: 1, message: "Email alredy in use" })
     return
   }
   res.send({
-    token: signToken(user),
-    user
+    token: signToken(newUser),
+    newUser
   })
 
 }

@@ -8,7 +8,7 @@ const OrderSchema = new Schema(
     },
     products: [
       {
-        product: {
+        productId: {
           type: Schema.Types.ObjectId,
           required: true,
         },
@@ -16,12 +16,18 @@ const OrderSchema = new Schema(
           type: Number,
           required: true,
         },
+        versionKey: false,
+        _id: false
       },
     ],
     total: {
       type: Number,
       required: true,
     },
+    storeId: {
+      type: Schema.Types.ObjectId,
+      ref: "User"
+    }
   },
   {
     timestamps: true,

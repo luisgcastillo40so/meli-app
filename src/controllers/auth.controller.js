@@ -5,7 +5,7 @@ const { userModel } = require("../models")
 const handleThrowHttpError = require("../utils/handleThrowHttpError")
 const thirdAuth = require("../config/auth")
 
-const signup = async (req, res) => {
+const signup = async (req, res, nex) => {
   req = matchedData(req)
   const password = await encrypt(req.password)
   const body = { ...req, password }
@@ -14,17 +14,17 @@ const signup = async (req, res) => {
     user = await userModel.create(body)
     user.set("password", undefined, { strict: false })
   } catch (error) {
+    console.log(error)
     console.log("*** REQ ERROR: Email alredy in use")
-    if (error.code === 11000) handleThrowHttpError(res, 409, { code: 1, message: "Email alredy in use" })
     return
   }
   res.send({
     token: signToken(user),
-    users
+    user
   })
 }
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
   const { email, password } = matchedData(req)
   const user = await userModel.findOne({ email }).select("+password")
   if (user) {
@@ -35,10 +35,10 @@ const login = async (req, res) => {
       return
     }
   }
-  console.log("*** REQ ERROR: Wrong email or password")
-
-  handleThrowHttpError(res, 401, { code: 2, message: "Invalid email or password" })
-  return
+  next({
+    status: 401,
+    message: "Incorrect email or password."
+  })
 }
 
 const getToken = async (req, res) => {
